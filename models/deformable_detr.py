@@ -447,7 +447,9 @@ def build(args):
         num_classes = 250
     device = torch.device(args.device)
 
-    backbone = build_backbone(args)
+    
+    backbone = build_backbone(args)  #* a Joiner instance (@return -- out, pos)
+
 
     transformer = build_deforamble_transformer(args)
     model = DeformableDETR(
