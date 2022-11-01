@@ -10,6 +10,7 @@
 """
 Deformable DETR model and criterion classes.
 """
+import pdb
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -112,7 +113,7 @@ class DeformableDETR(nn.Module):
                 nn.init.constant_(box_embed.layers[-1].bias.data[2:], 0.0)
 
     def forward(self, samples: NestedTensor):
-        """ The forward expects a NestedTensor, which consists of:
+        """ The forward expects a NestedTensor, which consists of:
                - samples.tensor: batched images, of shape [batch_size x 3 x H x W]
                - samples.mask: a binary mask of shape [batch_size x H x W], containing 1 on padded pixels
 
@@ -146,7 +147,7 @@ class DeformableDETR(nn.Module):
                     src = self.input_proj[l](srcs[-1])
                 m = samples.mask
                 mask = F.interpolate(m[None].float(), size=src.shape[-2:]).to(torch.bool)[0]
-                pos_l = self.backbone[1](NestedTensor(src, mask)).to(src.dtype)
+                pos_l = self.backbone[1](NestedTensor(src, mask)).to(src.dtype) # * position embedding
                 srcs.append(src)
                 masks.append(mask)
                 pos.append(pos_l)
@@ -154,7 +155,7 @@ class DeformableDETR(nn.Module):
         query_embeds = None
         if not self.two_stage:
             query_embeds = self.query_embed.weight
-        hs, init_reference, inter_references, enc_outputs_class, enc_outputs_coord_unact = self.transformer(srcs, masks, pos, query_embeds)
+        hs, init_reference, inter_references, enc_outputs_class, enc_outputs_coord_unact = self.transformer(srcs, masks, pos, query_embeds) # * <level_feature_maps>, <mask>, <pos_embedding>, <query_embedding>
 
         outputs_classes = []
         outputs_coords = []
@@ -447,9 +448,7 @@ def build(args):
         num_classes = 250
     device = torch.device(args.device)
 
-    
     backbone = build_backbone(args)  #* a Joiner instance (@return -- out, pos)
-
 
     transformer = build_deforamble_transformer(args)
     model = DeformableDETR(

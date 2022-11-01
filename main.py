@@ -7,7 +7,7 @@
 # Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved
 # ------------------------------------------------------------------------
 
-
+import pdb
 import argparse
 import datetime
 import json
@@ -28,6 +28,8 @@ from models import build_model
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Deformable DETR Detector', add_help=False)
+
+    # * Training Related
     parser.add_argument('--lr', default=2e-4, type=float)
     parser.add_argument('--lr_backbone_names', default=["backbone.0"], type=str, nargs='+')
     parser.add_argument('--lr_backbone', default=2e-5, type=float)
@@ -127,8 +129,10 @@ def get_args_parser():
 
 
 def main(args):
-    utils.init_distributed_mode(args)
-    print("git:\n  {}\n".format(utils.get_sha()))
+
+    # * commented out due to uncompatability of distributed mode
+    # utils.init_distributed_mode(args)
+    # print("git:\n  {}\n".format(utils.get_sha()))
 
     if args.frozen_weights is not None:
         assert args.masks, "Frozen training is meant for segmentation only"
@@ -136,7 +140,7 @@ def main(args):
 
     device = torch.device(args.device)
 
-    # fix the seed for reproducibility
+    # * fix the seed for reproducibility
     seed = args.seed + utils.get_rank()
     torch.manual_seed(seed)
     np.random.seed(seed)
@@ -152,16 +156,8 @@ def main(args):
     dataset_train = build_dataset(image_set='train', args=args)
     dataset_val = build_dataset(image_set='val', args=args)
 
-    if args.distributed:
-        if args.cache_mode:
-            sampler_train = samplers.NodeDistributedSampler(dataset_train)
-            sampler_val = samplers.NodeDistributedSampler(dataset_val, shuffle=False)
-        else:
-            sampler_train = samplers.DistributedSampler(dataset_train)
-            sampler_val = samplers.DistributedSampler(dataset_val, shuffle=False)
-    else:
-        sampler_train = torch.utils.data.RandomSampler(dataset_train)
-        sampler_val = torch.utils.data.SequentialSampler(dataset_val)
+    sampler_train = torch.utils.data.RandomSampler(dataset_train)
+    sampler_val = torch.utils.data.SequentialSampler(dataset_val)
 
     batch_sampler_train = torch.utils.data.BatchSampler(
         sampler_train, args.batch_size, drop_last=True)
@@ -209,9 +205,9 @@ def main(args):
                                       weight_decay=args.weight_decay)
     lr_scheduler = torch.optim.lr_scheduler.StepLR(optimizer, args.lr_drop)
 
-    if args.distributed:
-        model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu])
-        model_without_ddp = model.module
+    # if args.distributed:
+    #     model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[args.gpu])
+    #     model_without_ddp = model.module
 
     if args.dataset_file == "coco_panoptic":
         # We also evaluate AP during panoptic training, on original coco DS
@@ -237,6 +233,7 @@ def main(args):
             print('Missing Keys: {}'.format(missing_keys))
         if len(unexpected_keys) > 0:
             print('Unexpected Keys: {}'.format(unexpected_keys))
+            
         if not args.eval and 'optimizer' in checkpoint and 'lr_scheduler' in checkpoint and 'epoch' in checkpoint:
             import copy
             p_groups = copy.deepcopy(optimizer.param_groups)
@@ -267,11 +264,11 @@ def main(args):
             utils.save_on_master(coco_evaluator.coco_eval["bbox"].eval, output_dir / "eval.pth")
         return
 
-    print("Start training")
+    print("Start training...")
     start_time = time.time()
     for epoch in range(args.start_epoch, args.epochs):
-        if args.distributed:
-            sampler_train.set_epoch(epoch)
+        # if args.distributed:
+        #     sampler_train.set_epoch(epoch)
         train_stats = train_one_epoch(
             model, criterion, data_loader_train, optimizer, device, epoch, args.clip_max_norm)
         lr_scheduler.step()

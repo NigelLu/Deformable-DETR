@@ -1,0 +1,7 @@
+# ninja log v5
+1	6521	1665579136551624190	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.9/scratch/xl3139/Deformable-DETR/models/ops/src/cpu/ms_deform_attn_cpu.o	79e5d83e36e99809
+2	31389	1665579161425588727	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.9/scratch/xl3139/Deformable-DETR/models/ops/src/cuda/ms_deform_attn_cuda.o	1f8c4e781b79dd54
+6540	36992	1665579167042918665	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.9/scratch/xl3139/Deformable-DETR/models/ops/src/vision.o	6eff5bf5d231730e
+73	14668	1665579668726697018	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.9/scratch/xl3139/Deformable-DETR/models/ops/src/cuda/ms_deform_attn_cuda.o	32cc275ebdb76c9d
+108	16220	1665581552536876815	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.9/scratch/xl3139/Deformable-DETR/models/ops/src/cuda/ms_deform_attn_cuda.o	1f8c4e781b79dd54
+89	16223	1665623979797796439	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-3.9/scratch/xl3139/Deformable-DETR/models/ops/src/cuda/ms_deform_attn_cuda.o	32cc275ebdb76c9d

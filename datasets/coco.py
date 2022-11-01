@@ -14,6 +14,7 @@ Mostly copy-paste from https://github.com/pytorch/vision/blob/13b35ff/references
 """
 from pathlib import Path
 
+import pdb
 import torch
 import torch.utils.data
 from pycocotools import mask as coco_mask
@@ -34,6 +35,8 @@ class CocoDetection(TvCocoDetection):
         img, target = super(CocoDetection, self).__getitem__(idx)
         image_id = self.ids[idx]
         target = {'image_id': image_id, 'annotations': target}
+        # # print(f'Img shape: {img.shape}; Target shape: {target.shape}')
+        # pdb.set_trace()
         img, target = self.prepare(img, target)
         if self._transforms is not None:
             img, target = self._transforms(img, target)

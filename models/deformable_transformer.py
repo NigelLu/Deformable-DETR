@@ -11,6 +11,7 @@ import copy
 from typing import Optional, List
 import math
 
+import pdb
 import torch
 import torch.nn.functional as F
 from torch import nn, Tensor
@@ -236,6 +237,8 @@ class DeformableTransformerEncoder(nn.Module):
 
     @staticmethod
     def get_reference_points(spatial_shapes, valid_ratios, device):
+        # ? dig deeper later. spatial_shapes -> (4,2); valid_ratios -> (2,4,2)
+
         reference_points_list = []
         for lvl, (H_, W_) in enumerate(spatial_shapes):
 

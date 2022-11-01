@@ -1,0 +1,4 @@
+# ninja log v5
+0	7910	1665629141397583522	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-cpython-310/scratch/xl3139/Deformable-DETR/models/ops/src/cpu/ms_deform_attn_cpu.o	f77fc593729bffe
+7931	36351	1665629169817686196	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-cpython-310/scratch/xl3139/Deformable-DETR/models/ops/src/vision.o	62342a40b33e98b0
+0	37473	1665629170978036550	/scratch/xl3139/Deformable-DETR/models/ops/build/temp.linux-x86_64-cpython-310/scratch/xl3139/Deformable-DETR/models/ops/src/cuda/ms_deform_attn_cuda.o	e1132b92fcb1b634
